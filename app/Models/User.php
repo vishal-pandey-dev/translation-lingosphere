@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -21,7 +23,8 @@ class User extends Authenticatable
         'postal_code',
         'phone',
         'avatar_original',
-        'verification_token'
+        'verification_token',
+        'is_active'
     ];
 
     protected $hidden = [

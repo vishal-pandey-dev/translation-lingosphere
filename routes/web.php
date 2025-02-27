@@ -14,6 +14,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ContactUSController;
 use App\Http\Controllers\TranslationController;
 use Illuminate\Http\Request;
+require __DIR__.'/admin.php';
 
 Route::post('/currency', [CurrencyController::class, 'changeCurrency'])->name('currency.change');
 
