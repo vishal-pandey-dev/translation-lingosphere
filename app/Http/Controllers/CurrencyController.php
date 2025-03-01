@@ -31,15 +31,29 @@ class CurrencyController extends Controller
     public function index()
     {
         try {
-            $currencies = Currency::all();
+            $currencies = Currency::latest()->paginate(10);
             $active_currencies = Currency::getActiveCurrencies();
+
             Flash::success('Currencies loaded successfully');
-            return view('business_settings.currency', compact('currencies', 'active_currencies'));
+            return view('admin.business_settings.currency', compact('currencies', 'active_currencies'));
         } catch (\Exception $e) {
             Flash::error('Unable to load currencies');
             return back();
         }
     }
+
+
+    public function edit(Request $request)
+    {
+        try {
+            $currency = Currency::findOrFail($request->id);
+            return view('partials.currency_edit', compact('currency'));
+        } catch (\Exception $e) {
+            Flash::error('Currency edit error' . $e->getMessage());
+            return response()->json(['error' => 'Currency not found'], 404);
+        }
+    }
+
 
     public function store(Request $request)
     {
@@ -60,10 +74,10 @@ class CurrencyController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try {
-            $currency = Currency::findOrFail($id);
+            $currency = Currency::findOrFail($request->id);
             $currency->update([
                 'name' => $request->name,
                 'symbol' => $request->symbol,

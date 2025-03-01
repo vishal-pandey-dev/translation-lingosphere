@@ -1,405 +1,216 @@
-@extends('layouts.app')
+@extends('admin.layouts.adminHeader')
 
 @section('content')
+<div class="col container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="page-title">Add New Product</h2>
+        </div>
+    </div>
 
-<div class="row">
-	<form class="form form-horizontal mar-top" action="{{route('products.store')}}" method="POST" enctype="multipart/form-data" id="choice_form">
-		@csrf
-		<input type="hidden" name="added_by" value="admin">
-		<div class="panel">
-			<div class="panel-heading">
-				<h3 class="panel-title">{{__('Product Information')}}</h3>
-			</div>
-			<div class="panel-body">
-				<div class="tab-base tab-stacked-left">
-				    <!--Nav tabs-->
-				    <ul class="nav nav-tabs">
-				        <li class="active">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-1" aria-expanded="true">{{__('General')}}</a>
-				        </li>
-				        <li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-2" aria-expanded="false">{{__('Images')}}</a>
-				        </li>
-						<li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-3" aria-expanded="false">{{__('Videos')}}</a>
-				        </li>
-				        <li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-4" aria-expanded="false">{{__('Meta Tags')}}</a>
-				        </li>
-						<li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-5" aria-expanded="false">{{__('Customer Choice')}}</a>
-				        </li>
-						<li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-6" aria-expanded="false">{{__('Price')}}</a>
-				        </li>
-						<li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-7" aria-expanded="false">{{__('Description')}}</a>
-				        </li>
-						{{-- <li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-8" aria-expanded="false">Display Settings</a>
-				        </li> --}}
-						<li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-9" aria-expanded="false">{{__('Shipping Info')}}</a>
-				        </li>
-						<li class="">
-				            <a data-toggle="tab" href="#demo-stk-lft-tab-10" aria-expanded="false">{{__('PDF Specification')}}</a>
-				        </li>
-				    </ul>
+    <form class="form" action="{{ route('products.create') }}" method="POST" enctype="multipart/form-data" id="choice_form">
+        @csrf
+        <input type="hidden" name="added_by" value="admin">
 
-				    <!--Tabs Content-->
-				    <div class="tab-content">
-				        <div id="demo-stk-lft-tab-1" class="tab-pane fade active in">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Product Name')}}</label>
-								<div class="col-lg-7">
-									<input type="text" class="form-control" name="name" placeholder="{{__('Product Name')}}" onchange="update_sku()" required>
-								</div>
-							</div>
-							<div class="form-group" id="subscription">
-								<label class="col-lg-2 control-label">{{__('Subscription')}}</label>
-								<div class="col-lg-7">
-									<select class="form-control demo-select2-placeholder" name="subscription" id="subscription" required>
-										<option value="1 Month">1 Month</option>
-										<option value="3 Months">3 Months</option>
-										<option value="6 Months">6 Months</option>
-										<option value="12 Months">12 Months</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group" id="category">
-								<label class="col-lg-2 control-label">{{__('Category')}}</label>
-								<div class="col-lg-7">
-									<select class="form-control demo-select2-placeholder" name="category_id" id="category_id" required>
-										@foreach($categories as $category)
-											<option value="{{$category->id}}">{{__($category->name)}}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-							<div class="form-group" id="subcategory">
-								<label class="col-lg-2 control-label">{{__('Subcategory')}}</label>
-								<div class="col-lg-7">
-									<select class="form-control demo-select2-placeholder" name="subcategory_id" id="subcategory_id">
+        <div class="row g-4">
+            <!-- Product Information Card -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Basic Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- Product Name -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="name" id="name" 
+                                           placeholder="Product Name" onchange="update_sku()" required>
+                                    <label>Product Name</label>
+                                </div>
+                            </div>
 
-									</select>
-								</div>
-							</div>
-							<div class="form-group" id="subsubcategory">
-								<label class="col-lg-2 control-label">{{__('Sub Subcategory')}}</label>
-								<div class="col-lg-7">
-									<select class="form-control demo-select2-placeholder" name="subsubcategory_id" id="subsubcategory_id">
+                            <!-- Category Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" name="category_id" id="category_id" required>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label>Category</label>
+                                </div>
+                            </div>
 
-									</select>
-								</div>
-							</div>
-							<div class="form-group" id="brand">
-								<label class="col-lg-2 control-label">{{__('Brand')}}</label>
-								<div class="col-lg-7">
-									<select class="form-control demo-select2-placeholder" name="brand_id" id="brand_id">
-										<option value="">{{ ('Select Brand') }}</option>
-										@foreach (\App\Brand::all() as $brand)
-											<option value="{{ $brand->id }}">{{ $brand->name }}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Unit')}}</label>
-								<div class="col-lg-7">
-									{{--<input type="text" class="form-control" name="unit" placeholder="Unit (e.g. KG, Pc etc)" required>--}}
-									<input type="text" class="form-control" name="unit" placeholder="Unit (e.g. KG, Pc etc)" required value="Pc">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Tags')}}</label>
-								<div class="col-lg-7">
-									<input type="text" class="form-control" name="tags[]" placeholder="Type to add a tag" data-role="tagsinput">
-								</div>
-							</div>
-							@php
-							    $pos_addon = \App\Addon::where('unique_identifier', 'pos_system')->first();
-							@endphp
-							@if ($pos_addon != null && $pos_addon->activated == 1)
-								<div class="form-group">
-									<label class="col-lg-2 control-label">{{__('Barcode')}}</label>
-									<div class="col-lg-7">
-										<input type="text" class="form-control" name="barcode" placeholder="{{ ('Barcode') }}">
-									</div>
-								</div>
-							@endif
+                            <!-- Brand Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" name="brand_id" id="brand_id">
+                                        <option value="">Select Brand</option>
+                                        @foreach(\App\Models\Brand::all() as $brand)
+                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label>Brand</label>
+                                </div>
+                            </div>
 
-							@php
-							    $refund_request_addon = \App\Addon::where('unique_identifier', 'refund_request')->first();
-							@endphp
-							@if ($refund_request_addon != null && $refund_request_addon->activated == 1)
-								<div class="form-group">
-									<label class="col-lg-2 control-label">{{__('Refundable')}}</label>
-									<div class="col-lg-7">
-										<label class="switch" style="margin-top:5px;">
-											<input type="checkbox" name="refundable" checked>
-				                            <span class="slider round"></span></label>
-										</label>
-									</div>
-								</div>
-							@endif
-				        </div>
-				        <div id="demo-stk-lft-tab-2" class="tab-pane fade">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Main Images')}} </label>
-								<div class="col-lg-7">
-									<div id="photos">
+                            <!-- Unit -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="unit" 
+                                           placeholder="Unit (e.g. KG, Pc)" value="Pc" required>
+                                    <label>Unit</label>
+                                </div>
+                            </div>
 
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Thumbnail Image')}} <small>(290x300)</small></label>
-								<div class="col-lg-7">
-									<div id="thumbnail_img">
+                            <!-- Tags -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="tags[]" 
+                                           placeholder="Tags" data-role="tagsinput">
+                                    <label>Tags</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Featured')}} <small>(290x300)</small></label>
-								<div class="col-lg-7">
-									<div id="featured_img">
+                <!-- Images Card -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Product Images</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Gallery Images</label>
+                                <div id="photos" class="dropzone-container"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Thumbnail Image</label>
+                                <div id="thumbnail_img" class="dropzone-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Flash Deal')}} <small>(290x300)</small></label>
-								<div class="col-lg-7">
-									<div id="flash_deal_img">
+                <!-- Price & Stock Card -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Price & Stock</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" name="unit_price" 
+                                           min="0" step="0.01" required>
+                                    <label>Unit Price</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" name="current_stock" 
+                                           min="0" required>
+                                    <label>Stock Quantity</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" name="discount" 
+                                           min="0" step="0.01" required>
+                                    <label>Discount</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" name="discount_type">
+                                        <option value="amount">Fixed Amount</option>
+                                        <option value="percent">Percentage</option>
+                                    </select>
+                                    <label>Discount Type</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-									</div>
-								</div>
-							</div>
-				        </div>
-				        <div id="demo-stk-lft-tab-3" class="tab-pane fade">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Video Provider')}}</label>
-								<div class="col-lg-7">
-									<select class="form-control demo-select2-placeholder" name="video_provider" id="video_provider">
-										<option value="youtube">{{__('Youtube')}}</option>
-										<option value="dailymotion">{{__('Dailymotion')}}</option>
-										<option value="vimeo">{{__('Vimeo')}}</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Video Link')}}</label>
-								<div class="col-lg-7">
-									<input type="text" class="form-control" name="video_link" placeholder="{{__('Video Link')}}">
-								</div>
-							</div>
-				        </div>
-						<div id="demo-stk-lft-tab-4" class="tab-pane fade">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Meta Title')}}</label>
-								<div class="col-lg-7">
-									<input type="text" class="form-control" name="meta_title" placeholder="{{__('Meta Title')}}">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Description')}}</label>
-								<div class="col-lg-7">
-									<textarea name="meta_description" rows="8" class="form-control"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{ __('Meta Image') }}</label>
-								<div class="col-lg-7">
-									<div id="meta_photo">
+            <!-- Right Sidebar -->
+            <div class="col-lg-4">
+                <!-- Product Status Card -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Product Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="published" checked>
+                            <label class="form-check-label">Published</label>
+                        </div>
+                        <div class="form-check form-switch mt-3">
+                            <input class="form-check-input" type="checkbox" name="featured">
+                            <label class="form-check-label">Featured</label>
+                        </div>
+                    </div>
+                </div>
 
-									</div>
-								</div>
-							</div>
-				        </div>
+                <!-- SEO Card -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">SEO Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Meta Title</label>
+                            <input type="text" class="form-control" name="meta_title">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Meta Description</label>
+                            <textarea class="form-control" name="meta_description" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-						<div id="demo-stk-lft-tab-5" class="tab-pane fade">
-							<div class="form-group">
-								<div class="col-lg-2">
-									<input type="text" class="form-control" value="{{__('Colors')}}" disabled>
-								</div>
-								<div class="col-lg-7">
-									<select class="form-control color-var-select" name="colors[]" id="colors" multiple disabled>
-										@foreach (\App\Color::orderBy('name', 'asc')->get() as $key => $color)
-											<option value="{{ $color->code }}">{{ $color->name }}</option>
-										@endforeach
-									</select>
-								</div>
-								<div class="col-lg-2">
-									<label class="switch" style="margin-top:5px;">
-										<input value="1" type="checkbox" name="colors_active">
-										<span class="slider round"></span>
-									</label>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="col-lg-2">
-									<input type="text" class="form-control" value="{{__('Attributes')}}" disabled>
-								</div>
-			                    <div class="col-lg-7">
-			                        <select name="choice_attributes[]" id="choice_attributes" class="form-control demo-select2" multiple data-placeholder="Choose Attributes">
-										@foreach (\App\Attribute::all() as $key => $attribute)
-											<option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
-										@endforeach
-			                        </select>
-			                    </div>
-			                </div>
-
-							<div>
-								<p>Choose the attributes of this product and then input values of each attribute</p>
-								<br>
-							</div>
-
-							<div class="customer_choice_options" id="customer_choice_options">
-
-							</div>
-
-							{{-- <div class="customer_choice_options" id="customer_choice_options">
-
-							</div>
-							<div class="form-group">
-								<div class="col-lg-2">
-									<button type="button" class="btn btn-info" onclick="add_more_customer_choice_option()">{{ __('Add more customer choice option') }}</button>
-								</div>
-							</div> --}}
-				        </div>
-
-						<div id="demo-stk-lft-tab-6" class="tab-pane fade">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Unit price')}}</label>
-								<div class="col-lg-7">
-									<input type="number" min="0" value="0" step="0.01" placeholder="{{__('Unit price')}}" name="unit_price" class="form-control" required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Purchase price')}}</label>
-								<div class="col-lg-7">
-									<input type="number" min="0" value="0" step="0.01" placeholder="{{__('Purchase price')}}" name="purchase_price" class="form-control" required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Tax')}}</label>
-								<div class="col-lg-7">
-									<input type="number" min="0" value="0" step="0.01" placeholder="{{__('Tax')}}" name="tax" class="form-control" required>
-								</div>
-								<div class="col-lg-1">
-									<select class="demo-select2" name="tax_type">
-										<option value="amount">$</option>
-										<option value="percent">%</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Discount')}}</label>
-								<div class="col-lg-7">
-									<input type="number" min="0" value="0" step="0.01" placeholder="{{__('Discount')}}" name="discount" class="form-control" required>
-								</div>
-								<div class="col-lg-1">
-									<select class="demo-select2" name="discount_type">
-										<option value="amount">$</option>
-										<option value="percent">%</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group" id="quantity">
-								<label class="col-lg-2 control-label">{{__('Quantity')}}</label>
-								<div class="col-lg-7">
-									<input type="number" min="0" value="0" step="1" placeholder="{{__('Quantity')}}" name="current_stock" class="form-control" required>
-								</div>
-							</div>
-							<br>
-							<div class="sku_combination" id="sku_combination">
-
-							</div>
-				        </div>
-						<div id="demo-stk-lft-tab-7" class="tab-pane fade">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('Description')}}</label>
-								<div class="col-lg-9">
-									<textarea class="editor" name="description"></textarea>
-								</div>
-							</div>
-				        </div>
-
-						{{-- <div id="demo-stk-lft-tab-8" class="tab-pane fade">
-
-				        </div> --}}
-
-						<div id="demo-stk-lft-tab-9" class="tab-pane fade">
-							<div class="row bord-btm">
-								<div class="col-md-2">
-									<div class="panel-heading">
-										<h3 class="panel-title">{{__('Free Shipping')}}</h3>
-									</div>
-								</div>
-								<div class="col-md-10">
-									<div class="form-group">
-										<label class="col-lg-2 control-label">{{__('Status')}}</label>
-										<div class="col-lg-7">
-											<label class="switch" style="margin-top:5px;">
-												<input type="radio" name="shipping_type" value="free" checked>
-												<span class="slider round"></span>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-2">
-									<div class="panel-heading">
-										<h3 class="panel-title">{{__('Flat Rate')}}</h3>
-									</div>
-								</div>
-								<div class="col-md-10">
-									<div class="form-group">
-										<label class="col-lg-2 control-label">{{__('Status')}}</label>
-										<div class="col-lg-7">
-											<label class="switch" style="margin-top:5px;">
-												<input type="radio" name="shipping_type" value="flat_rate" checked>
-												<span class="slider round"></span>
-											</label>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-lg-2 control-label">{{__('Shipping cost')}}</label>
-										<div class="col-lg-7">
-											<input type="number" min="0" value="0" step="0.01" placeholder="{{__('Shipping cost')}}" name="flat_shipping_cost" class="form-control" required>
-										</div>
-									</div>
-								</div>
-							</div>
-
-				        </div>
-						<div id="demo-stk-lft-tab-10" class="tab-pane fade">
-							<div class="form-group">
-								<label class="col-lg-2 control-label">{{__('PDF Specification')}}</label>
-								<div class="col-lg-7">
-									<input type="file" class="form-control" placeholder="{{__('PDF')}}" name="pdf" accept="application/pdf">
-								</div>
-							</div>
-				        </div>
-				    </div>
-				</div>
-			</div>
-			<div class="panel-footer text-right">
-				<button type="submit" name="button" class="btn btn-info">{{ __('Save') }}</button>
-			</div>
-		</div>
-	</form>
+        <!-- Submit Button -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>Save Product
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
+<style>
+.dropzone-container {
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    background: #f8f9fa;
+    cursor: pointer;
+}
 
+.form-floating > .form-control {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+}
+
+.form-floating > label {
+    padding: 1rem 0.75rem;
+}
+</style>
 @endsection
+
 
 @section('script')
 
-<script type="text/javascript">
+{{-- <script type="text/javascript">
 	function add_more_customer_choice_option(i, name){
 		$('#customer_choice_options').append('<div class="form-group"><div class="col-lg-2"><input type="hidden" name="choice_no[]" value="'+i+'"><input type="text" class="form-control" name="choice[]" value="'+name+'" placeholder="Choice Title" readonly></div><div class="col-lg-7"><input type="text" class="form-control" name="choice_options_'+i+'[]" placeholder="Enter choice values" data-role="tagsinput" onchange="update_sku()"></div></div>');
 
@@ -621,6 +432,6 @@
 	});
 
 
-</script>
+</script> --}}
 
 @endsection

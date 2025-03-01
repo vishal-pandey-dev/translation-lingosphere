@@ -96,4 +96,12 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
+
+    public function admin_product_edit($id)
+    {
+        $product = Product::findOrFail($id);
+        $tags = json_decode($product->tags);
+        $categories = Category::all();
+        return view('admin.products.edit', compact('product', 'categories', 'tags'));
+    }
 }

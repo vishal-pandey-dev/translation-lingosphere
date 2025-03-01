@@ -57,6 +57,13 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'admin' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/admin/admin.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
@@ -85,7 +92,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
         ],
 
