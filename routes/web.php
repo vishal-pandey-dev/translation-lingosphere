@@ -112,6 +112,15 @@ Route::middleware(['admin.log'])->group(function () {
     Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
     Route::get('/privacypolicy', [HomeController::class, 'privacypolicy'])->name('privacypolicy');
 
+    // Service Routes
+    Route::get('/faqs', [HomeController::class, 'faqs'])->name('faqs');
+    Route::get('/seo', [HomeController::class, 'seo'])->name('seo');
+    Route::get('/ppc', [HomeController::class, 'ppc'])->name('ppc');
+    Route::get('/orm', [HomeController::class, 'orm'])->name('orm');
+    Route::get('/social', [HomeController::class, 'social'])->name('social');
+    Route::get('/wdd', [HomeController::class, 'wdd'])->name('wdd');
+    Route::get('/em', [HomeController::class, 'em'])->name('em');
+
     // User Dashboard Routes
     Route::middleware(['user', 'verified'])->group(function () {
         Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');

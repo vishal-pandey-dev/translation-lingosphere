@@ -19,7 +19,8 @@ class GenericEmailManager extends Mailable
 
     public function build()
     {
-        return $this->view($this->emailData['view'])
+        return $this->view($this->emailData['view'])    
+                    // ->cc($this->emailData['cc'])
                     ->from($this->emailData['from'])
                     ->subject($this->emailData['subject'])
                     ->with(['data' => $this->emailData['data']]);

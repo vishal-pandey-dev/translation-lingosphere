@@ -259,8 +259,6 @@
     </script>
 @endsection
 @section('scripts')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
     <script>
         $(document).ready(function() {
             function updateDetails() {
