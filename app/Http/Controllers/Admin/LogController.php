@@ -11,47 +11,49 @@ class LogController extends Controller
 {
     public function index()
     {
-        $mainLogFile = storage_path('logs/laravel.log');
-        $adminLogFile = storage_path('logs/admin/admin.log');
+        $selectedDate = request()->get('date', now()->format('Y-m-d'));
+        $adminLogFile = storage_path("logs/admin/admin-{$selectedDate}.log");
 
-        $mainLogs = collect(file_exists($mainLogFile) ? array_reverse(file($mainLogFile)) : []);
-        $adminLogs = collect(file_exists($adminLogFile) ? array_reverse(file($adminLogFile)) : []);
+        // Get available log dates
+        $logDates = collect(glob(storage_path('logs/admin/admin-*.log')))
+            ->map(function ($file) {
+                return str_replace(['admin-', '.log'], '', basename($file));
+            })
+            ->sort()
+            ->reverse();
 
-        $allLogs = $mainLogs->merge($adminLogs)->map(function ($line) {
-            // Check if line starts with stack trace pattern (#number)
-            if (preg_match('/^#\d+/', $line)) {
+        $adminLogs = collect(file_exists($adminLogFile) ? array_reverse(file($adminLogFile)) : [])
+            ->map(function ($line) {
+                if (preg_match('/^#\d+/', $line)) {
+                    return null;
+                }
+
+                $parts = explode(' ', $line, 4);
+
+                if (count($parts) >= 3 && !empty($parts[0]) && !empty($parts[1])) {
+                    return [
+                        'timestamp' => $parts[0] . ' ' . $parts[1],
+                        'level' => trim($parts[2], '[]'),
+                        'message' => isset($parts[3]) ? trim($parts[3]) : '',
+                        'source' => 'admin'
+                    ];
+                }
                 return null;
-            }
-
-            $parts = explode(' ', $line, 4);
-
-            // Only process lines that look like actual log entries
-            if (count($parts) >= 3 && !empty($parts[0]) && !empty($parts[1])) {
-                return [
-                    'timestamp' => $parts[0] . ' ' . $parts[1],
-                    'level' => trim($parts[2], '[]'),
-                    'message' => isset($parts[3]) ? trim($parts[3]) : '',
-                    'source' => strpos($line, '[admin]') !== false ? 'admin' : 'main'
-                ];
-            }
-            return null;
-        })->filter(); // Remove null entries
+            })->filter();
 
         $page = request()->get('page', 1);
         $perPage = 50;
 
         $paginatedLogs = new LengthAwarePaginator(
-            $allLogs->forPage($page, $perPage),
-            $allLogs->count(),
+            $adminLogs->forPage($page, $perPage),
+            $adminLogs->count(),
             $perPage,
             $page,
             ['path' => request()->url()]
         );
 
-        return view('admin.logs.index', compact('paginatedLogs'));
+        return view('admin.logs.index', compact('paginatedLogs', 'logDates', 'selectedDate'));
     }
-
-
 
 
     public function logSpecificAction($data)

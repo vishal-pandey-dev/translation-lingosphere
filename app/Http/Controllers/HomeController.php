@@ -22,6 +22,7 @@ use App\Models\{
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\{Auth, Hash, DB, Cookie, Log};
 use Exception;
+use Laracasts\Flash\Flash;
 
 class HomeController extends Controller
 {
@@ -309,14 +310,16 @@ class HomeController extends Controller
             }
 
             DB::commit();
-
-            return redirect()->back()->with('success', 'Profile updated successfully');
+            Flash::success('Profile updated successfully!');
+            return redirect()->back();
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Profile update error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Profile update failed');
+            Flash::error('Profile update failed. Please try again.');
+            return redirect()->back();
         }
     }
+
 
 
 

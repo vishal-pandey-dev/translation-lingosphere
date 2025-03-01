@@ -42,7 +42,7 @@
 
             <li class="menu-header">System</li>
             <li>
-                <a href="/admin/logs">
+                <a href="{{ route('admin.logs') }}">
                     <i class="fas fa-history"></i>
                     <span>System Logs</span>
                 </a>
@@ -123,9 +123,9 @@
     .pagination-wrapper .pagination {
         margin: 0 !important;
         border-radius: 8px !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     }
-   
+
     .pagination-wrapper .page-item .page-link {
         padding: 0.75rem 1.25rem !important;
         font-weight: 500 !important;
@@ -133,22 +133,22 @@
         border: none !important;
         transition: all 0.3s ease !important;
     }
-   
+
     .pagination-wrapper .page-item.active .page-link {
         background-color: #4e73df !important;
         color: white !important;
     }
-   
+
     .pagination-wrapper .page-item .page-link:hover {
         background-color: #eaecf4 !important;
         color: #4e73df !important;
     }
-   
+
     .pagination-wrapper .page-item:first-child .page-link {
         border-top-left-radius: 8px !important;
         border-bottom-left-radius: 8px !important;
     }
-   
+
     .pagination-wrapper .page-item:last-child .page-link {
         border-top-right-radius: 8px !important;
         border-bottom-right-radius: 8px !important;

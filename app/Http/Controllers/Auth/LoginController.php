@@ -8,6 +8,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Laracasts\Flash\Flash;
 
 class LoginController extends Controller
 {
@@ -71,7 +72,16 @@ class LoginController extends Controller
 
     protected function sendFailedLoginResponse(Request $request)
     {
-        return back()->with('loginfailed', true);
+        $credentials = $this->credentials($request);
+
+        if (filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
+            Flash::error('Invalid email or password. Please try again.');
+        } else {
+            Flash::error('Invalid phone number or password. Please try again.');
+        }
+
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'));
     }
 
     public function logout(Request $request)

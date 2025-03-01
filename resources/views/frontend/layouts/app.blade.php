@@ -178,10 +178,17 @@
 
                         <!-- Auth Links -->
                         @auth
-                            <a href="{{ route('dashboard') }}" class="btn btn_header_link">
-                                <img src="{{ asset('frontend/Lingosphere/img/acc_logo.svg') }}" alt="Account"
-                                    class="img-fluid">
-                            </a>
+                            @if (auth()->user()->user_type === 'admin')
+                                <a href="{{ route('admin.dashboard') }}" class="btn btn_header_link">
+                                    <img src="{{ asset('frontend/Lingosphere/img/acc_logo.svg') }}" alt="Admin Account"
+                                        class="img-fluid">
+                                </a>
+                            @else
+                                <a href="{{ route('dashboard') }}" class="btn btn_header_link">
+                                    <img src="{{ asset('frontend/Lingosphere/img/acc_logo.svg') }}" alt="Account"
+                                        class="img-fluid">
+                                </a>
+                            @endif
                         @else
                             <a href="{{ route('user.login') }}" class="btn btn_header_link">
                                 <img src="{{ asset('frontend/Lingosphere/img/acc_logo.svg') }}" alt="Login"

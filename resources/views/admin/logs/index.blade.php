@@ -69,53 +69,63 @@
                         <button class="btn btn-outline-primary" data-filter="admin">Admin Logs</button>
                         <button class="btn btn-outline-primary" data-filter="main">Main Logs</button>
                     </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="logsTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>Source</th>
-                                    <th>Level</th>
-                                    <th>Message</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($paginatedLogs as $log)
-                                    <tr class="log-entry {{ $log['level'] === 'ERROR' ? 'table-danger' : '' }}"
-                                        data-source="{{ $log['source'] }}">
-                                        <td>{{ $log['timestamp'] }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ $log['source'] === 'admin' ? 'purple' : 'primary' }}">
-                                                {{ ucfirst($log['source']) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-{{ $log['level'] === 'ERROR' ? 'danger' : 'info' }}">
-                                                {{ $log['level'] }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $log['message'] }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="date-filter">
+                        <select class="form-select" onchange="window.location.href='?date=' + this.value">
+                            @foreach ($logDates as $date)
+                                <option value="{{ $date }}" {{ $date == $selectedDate ? 'selected' : '' }}>
+                                    {{ $date }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <div class="text-muted">
-                    Showing {{ $paginatedLogs->firstItem() }} to {{ $paginatedLogs->lastItem() }} of
-                    {{ $paginatedLogs->total() }}
-                    logs
+        </div>
+
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="logsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Source</th>
+                                <th>Level</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($paginatedLogs as $log)
+                                <tr class="log-entry {{ $log['level'] === 'ERROR' ? 'table-danger' : '' }}"
+                                    data-source="{{ $log['source'] }}">
+                                    <td>{{ $log['timestamp'] }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ $log['source'] === 'admin' ? 'purple' : 'primary' }}">
+                                            {{ ucfirst($log['source']) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ $log['level'] === 'ERROR' ? 'danger' : 'info' }}">
+                                            {{ $log['level'] }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $log['message'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <div class="pagination-wrapper">
-                    {{ $paginatedLogs->onEachSide(1)->links() }}
-                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-muted">
+                Showing {{ $paginatedLogs->firstItem() }} to {{ $paginatedLogs->lastItem() }} of
+                {{ $paginatedLogs->total() }}
+                logs
+            </div>
+            <div class="pagination-wrapper">
+                {{ $paginatedLogs->onEachSide(1)->links() }}
             </div>
         </div>
     </div>
