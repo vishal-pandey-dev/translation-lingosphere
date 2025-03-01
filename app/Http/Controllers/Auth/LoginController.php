@@ -61,7 +61,6 @@ class LoginController extends Controller
         ];
     }
 
-    js
     public function authenticated()
     {
         if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
